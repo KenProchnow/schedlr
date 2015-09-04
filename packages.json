@@ -1,0 +1,26 @@
+{
+  "name": "mssql",
+  "main": "app.js",
+  "version": "0.0.1",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/skilbjo/mssql.git"
+  },
+  "engines": {
+    "node": "0.12.7"
+  },
+  "dependencies": {
+    "mssql": "2.2.0",
+    "underscore": "1.8.3",
+    "csv": "0.4.5",
+    "xlsx": "0.8.0",
+    "exceljs": "0.2.3"
+  },
+  "devDependencies": {
+    "nodemon": "1.2.1" 
+  },
+  "jshintConfig": {
+    "laxcomma": true
+  }
+}

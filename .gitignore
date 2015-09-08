@@ -15,6 +15,8 @@ bower_components/
 *.txt
 db_backup/
 config.js
+my.csv
+out.xlsx
 
 Ignore the stuff in the public directory except for ...
 # public/

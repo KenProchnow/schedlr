@@ -45,7 +45,7 @@ var saveCSV2 = function(data) {
 	.on('finish', function(){
 		e.email([
 			'You are receiving an automated message',
-			['jskilbeck@yapstone.com','john.skilbeck@gmail.com'],
+			['jskilbeck@yapstone.com','john.skilbeck@gmail.com','jmalnar@yapstone.com','vbakshi@yapstone.com','sstockberger@yapstone.com','amendelsohn@yapstone.com'],
 			'Daily TPV numbers',
 			file+'.csv'
 		]);

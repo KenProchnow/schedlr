@@ -20,5 +20,6 @@ out.xlsx
 
 Ignore the stuff in the public directory except for ...
 # public/
+lib/
 
 # Unless they match this file path

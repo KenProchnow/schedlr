@@ -9,18 +9,17 @@ var
 	distro 			= require('./emailDistributionList/distributionList.js')
 	;
 
-var executeQuery = function(sql, file) {
-	runQuery(sql, file);
+var executeQuery = function(sql, file, cb) {
+	runQuery(sql, file, cb);
 };
 
-
-var runQuery = function(sql, file) {
+var runQuery = function(sql, file, cb) {
 	var connection 	= new mssql.Connection(db_config, function(err) {
 		if (err) console.log(err);
 		var r = new mssql.Request(connection);
 		r.query(sql, function(err, results){
 			if (err) console.log(err);
-			saveCSV(results, file);
+			saveCSV(results, file, cb);
 		});
 	});
 
@@ -29,17 +28,20 @@ var runQuery = function(sql, file) {
 	});
 };
 
-var saveCSV = function(data, file) {
+var saveCSV = function(data, file, cb) {
 	var outFile 		= path.join(outDir, file + '.csv');
+
+	console.log(data);
 
 	csv.writeToPath(outFile, data, {headers: true})
 	.on('finish', function(){
 		// console.log(data);
-		emailData(file);
+		// emailData(file, cb);
+		cb(file);
 	});
 };
 
-var emailData = function(file) {
+var emailData = function(file, cb) {
 	e.email([
 		'You are receiving an automated message',
 		distro[file],

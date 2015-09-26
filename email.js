@@ -1,22 +1,21 @@
 var 
-	email				= require('emailjs'),	
-	emailconfig = require('./lib/config/email.js')
-	, server 			= email.server.connect(emailconfig)
-	, fs = require('fs')
-	, path = require('path')
-	, data = ''
-	, fileDir 		= 'CSVs'
-	, _ 				= require('underscore')
-	, jade = require('jade')
-	, marked          = require('marked').setOptions({ breaks: true })
-	, template = './daily_tpv.jade'
+	email				= require('emailjs'),
+	emailconfig = require('./lib/config/email.js'),
+	server 			= email.server.connect(emailconfig),
+	fs = require('fs'),
+	path = require('path'),
+	data = '',
+	fileDir 		= 'CSVs'
 	;
 
+// var arr = ['You are receiving an automated message', // body
+// 		distro[file], // distro
+// 		'Daily TPV numbers', // subject
+// 		file+'.csv' // attachment
+// 	];
 
 var email = function(arr){
-	// makeTable(arr);
-	readData(arr);
-		// composeEmailHTML(arr);
+	composeEmail(arr);
 };
 
 var composeEmail = function(arr){

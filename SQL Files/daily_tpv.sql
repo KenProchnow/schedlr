@@ -1,12 +1,12 @@
 declare @start as date , @end as date , @now as date;
 
 set @now	= getdate()						-- Today
-set @end	= dateadd(d,-1,@now)			-- Yesterday
+set @end	= dateadd(d,-1,@now)	-- Yesterday
 set @start	= dateadd(d,0,@end)	-- Yesterday minus one
 
 select
     txn.PostDate_R as Date , c.Vertical,         
-    sum(txn.amount) Txn_Amount, sum(txn.AmtNetConvFee) ConvFee, count(*) as Txn_Count
+    sum(txn.amount) Txn_Amount, count(*) as Txn_Count
 from                      
     YapstoneDM.dbo.[Transaction] txn with (nolock)                        
     inner join ETLStaging..FinanceParentTable c with (nolock) on c.PlatformId = txn.PlatformId and c.ChildCompanyId = txn.Ref_CompanyId   

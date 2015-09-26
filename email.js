@@ -40,11 +40,13 @@ var readData = function(arr) {
     file.on('data', function(chunk) { data+=chunk; });
 
     file.on('end', function(){
-        makeTable(data, arr);
+        makeTable(data, arr, function(arr, table){
+        		composeEmailHTML(arr, table);
+        });
     });
 };
 
-var makeTable = function(csv, arr) {
+var makeTable = function(csv, arr, cb) {
     var lines = csv.replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
@@ -57,24 +59,12 @@ var makeTable = function(csv, arr) {
                 '\n\t</thead>\n\t<tbody>\n' + lines.slice(1).join('\n') +
                 '\t</tbody>\n</table>';
 
-		composeEmailHTML(arr, table);
+    cb(arr, table);
 };
 
 
 var composeEmailHTML = function(arr, table){
 	var text = arr[0], to = arr[1], subject = arr[2], attachment = arr[3];
-		// , html = jade.renderFile(template, {
-		// 	date: '2015-09-21'
-		// 		, s_t: 19999, s_c: 999 // SRP
-		// 		, d_t: 19999, d_c: 999 // Dues
-		// 		, v_t: 19999, v_c: 999 // VRP
-		// 		, n_t: 19999, n_c: 999 // NonProfit
-		// 		, i_t: 19999, i_c: 999 // Inn
-		// 		, h_t: 19999, h_c: 999 // HA
-		// 		, r_t: 19999, r_c: 999 // Rent
-		// })
-		// ;
-
 	var message = {
 		text: text,
 		from: 'John Skilbeck jskilbeck@yapstone.com',

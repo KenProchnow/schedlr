@@ -1,17 +1,16 @@
 var 
-	email				= require('emailjs'),	
-	emailconfig = require('./config/email.js'),
-	server 			= email.server.connect(emailconfig),
-	distro 			= './../emailDistributionList/distributionList.js',
-	fs = require('fs'),
-	path = require('path'),
-	data = '',
-	fileDir 		= 'CSVs'
+	email	= require('emailjs')
+	, emailconfig = require('./lib/config/email.js')
+	, fs = require('fs')
+	, path = require('path')
+	, server 			= email.server.connect(emailconfig)
+	, distro 			= './lib/emailDistributionList/distributionList.js'
+	, data = ''
+	, fileDir 		= './../csv'
 	;
 
 var email = function(file){
 	readData(file);
-	// generateTable(file);
 };
 
 var readData = function(file) {
@@ -29,32 +28,22 @@ var generateTable = function(data, file, cb) {
 		table = [];
 
 	for (var i = 0; i < lines.length; i++) {
-	    table.push("<tr><td>"+ lines[i].split(",").join("</td><td>")+ "</td></tr>");
+		if (i === 0) { // headers
+	    table.push('<tr><th>'+ lines[i].split(",").join('</th><th>')+ '</th></tr>');
+		} else { // data
+			table.push('<tr><td align="center">'+ lines[i].split(",").join('</td><td align="center">')+ '</td></tr>');
+		}
 	}
-	table = "<table>" + table.join("") + "</table>";
+	table = '<table border="2" cellspcing="1" cellpadding="1">' + table.join("") + '</table>';
 
 	cb(table, file);
-
-    // var lines = data.replace(/&/g, '&amp;')
-    //     .replace(/</g, '&lt;')
-    //     .replace(/>/g, '&gt;')
-    //     .replace(/"/g, '&quot;')
-    //     .split(/[\n\r]/)
-    //     .map(function(line) { return line.split(','); })
-    //     .map(function(row) {return '\t\t<tr><td>' + row[0] + '</td><td>' + row[1] + '</td></tr>';});
-     
-    // var table = '<table>\n\t<thead>\n'      + lines[0] +
-    //             '\n\t</thead>\n\t<tbody>\n' + lines.slice(1).join('\n') +
-    //             '\t</tbody>\n</table>';
-
-   // cb(table);
 };
 
 
 var composeEmailHTML = function(table, file){
 	var arr = ['You are receiving an automated message', // body
 		distro[file], // distro
-		'Daily TPV numbers', // subject
+		'Data ready: '+file, // subject
 		file+'.csv' // attachment
 	];
 
@@ -66,17 +55,12 @@ var composeEmailHTML = function(table, file){
 		subject: subject,
 		attachment: [
 			{ data: '<html><body><p>Automated Email</p><br />'+table+'</body></html>', alternative:true},
-			{ path: 'CSVs/'+attachment, type: 'text/csv', name: attachment	}
+			{ path: path.join(fileDir,attachment), type: 'text/csv', name: attachment	}
 		]
 	};
 
-	console.log(message);
-
 	sendEmail(message);
 };
-
-
-
 
 var sendEmail = function(message){
 	server.send(message, function(err, message){

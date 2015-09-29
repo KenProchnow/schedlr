@@ -1,7 +1,7 @@
 var 
-	parse = require('./readFile.js').parseSQL,
-	query = require('./executeQuery.js').executeQuery,
-	email = require('./lib/emailHTML.js').email,
+	parse = require('./../parse.js').parseSQL,
+	query = require('./../query.js').executeQuery,
+	email = require('./../email.js').email,
 	html = true, // send results as html?
 	file = 'daily_tpv'
 	;

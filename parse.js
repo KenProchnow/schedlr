@@ -1,8 +1,8 @@
 var 
-	fs 				= require('fs')				
-	, path 		= require('path')
-	, data 			= ''
-	, fileDir 	= 'SQL Files'
+	fs 	= require('fs')				
+	, path = require('path')
+	, data = ''
+	, fileDir = './../sql'
 	;
 
 var parseSQL = function(file, cb){ 

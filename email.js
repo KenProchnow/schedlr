@@ -23,6 +23,26 @@ var readData = function(file) {
   });
 };
 
+var formatNumber = function (number){
+	var number = number.toFixed(2) + '';
+	var x = number.split('.');
+	var x1 = x[0];
+	var x2 = x.length > 1 ? '.' + x[1] : '';
+	var rgx = /(\d+)(\d{3})/;
+	while (rgx.test(x1)) {
+	    x1 = x1.replace(rgx, '$1' + ',' + '$2');
+	}
+	return x1;
+};
+
+var isDate = function(date) {
+	return (new Date(date) !== "Invalid Date" && !isNaN(new Date(date)) ) ? true : false;
+};
+
+var formatDate = function(date) {
+	return new Date(date).toISOString().slice(0,10);
+};
+
 var generateTable = function(data, file, cb) {
 	var lines = data.split("\n"),
 		table = [];
@@ -31,7 +51,18 @@ var generateTable = function(data, file, cb) {
 		if (i === 0) { // headers
 	    table.push('<tr><th>'+ lines[i].split(",").join('</th><th>')+ '</th></tr>');
 		} else { // data
-			table.push('<tr><td align="center">'+ lines[i].split(",").join('</td><td align="center">')+ '</td></tr>');
+			line = lines[i].split(",");
+
+			// Format Numbers
+			line.map(function(item, index){
+				if ( !isNaN(parseFloat(item)) ) {
+					return line[index] = formatNumber(parseInt(item));
+				} else if ( isDate(item) ) {
+					return line[index] = formatDate(item);
+				}
+			});
+
+			table.push('<tr><td align="center">'+ line.join('</td><td align="center">')+ '</td></tr>');
 		}
 	}
 	table = '<table border="2" cellspcing="1" cellpadding="1">' + table.join("") + '</table>';

@@ -14,6 +14,6 @@ where    1 = 1
 		and txn.PostDate_R between @start and @end            
 		and txn.ProcessorId not in (14,16)                    
 		and txn.TransactionCycleId in (1)  
-		and txn.PlatformId in (1) -- No HA-Intl for now        
+		and txn.PlatformId in (1,2,3,4) -- No HA-Intl for now        
 group by
 	cast(txn.PostDate_R as date), c.Vertical

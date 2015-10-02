@@ -43,6 +43,11 @@ var formatDate = function(date) {
 	return new Date(date).toISOString().slice(0,10);
 };
 
+var hasDecimalString = function(number){
+	var regex = /%/
+	return regex.test(number) ;
+};
+
 var generateTable = function(data, file, cb) {
 	var lines = data.split("\n"),
 		table = [];
@@ -55,9 +60,9 @@ var generateTable = function(data, file, cb) {
 
 			// Format Numbers
 			line.map(function(item, index){
-				if ( !isNaN(parseFloat(item)) ) {
+				if ( !isNaN(parseFloat(item)) && !hasDecimalString(item) ) {
 					return line[index] = formatNumber(parseInt(item));
-				} else if ( isDate(item) ) {
+				} else if ( isDate(item) && !hasDecimalString(item) ) {
 					return line[index] = formatDate(item);
 				}
 			});

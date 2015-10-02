@@ -2,7 +2,7 @@ declare @start as date , @end as date , @now as date, @startMTD as date , @start
 @lyStart_MTD as date ,@lyStart_YTD as date ,@lyEnd_MTD as date , @lyEnd_YTD as date , @dates as nvarchar(max) , @query as nvarchar(max);
  
 set @now       = getdate()    -- Today
-set @end       = dateadd(d,-2,@now)  -- Yesterday
+set @end       = dateadd(d,-1,@now)  -- Yesterday
 set @start     = dateadd(d,0,@end)  -- Yesterday minus one
 set @startMTD  = dateadd(m, datediff(m, 0, @end), 0)
 set @startYTD  = dateadd(yy, datediff(yy, 0, @end), 0)

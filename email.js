@@ -4,7 +4,7 @@ var
 	, fs = require('fs')
 	, path = require('path')
 	, server 			= email.server.connect(emailconfig)
-	, distro 			= './lib/emailDistributionList/distributionList.js'
+	, distro 			= require('./lib/emailDistributionList/distributionList.js')
 	, data = ''
 	, fileDir 		= './../csv'
 	;
@@ -87,7 +87,7 @@ var composeEmailHTML = function(table, file){
 	var message = {
 		text: text,
 		from: 'John Skilbeck jskilbeck@yapstone.com',
-		to: 	'jskilbeck@yapstone.com',
+		to: 	to,
 		subject: subject,
 		attachment: [
 			{ data: '<html><body><p>Automated Email</p><br />'+table+'</body></html>', alternative:true},

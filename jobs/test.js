@@ -3,15 +3,13 @@ var
 	query = require('./../query.js').executeQuery,
 	format = require('./../lib/format.js').cleanData,
 	html = true, // send results as html?
-	file = 'daily_tpv_mtd_ytd'
-	;
+	file = 'test'
+	; 
 
 if (html) { var email = require('./../email.js').email; } else { var email = require('./../lib/email_library/email.js').email; };
  
 parse(file, function(sql){
 	query(sql, file, function(result){
-		format(file, function(){	
-			email(file);	
-		})
+		email(file);	
 	});
 });

@@ -1,82 +1,35 @@
 var 
-	email	= require('emailjs')
-	, emailconfig = require('./lib/config/email.js')
-	, fs = require('fs')
+	fs = require('fs')
 	, path = require('path')
-	, server 			= email.server.connect(emailconfig)
-	, distro 			= require('./lib/emailDistributionList/distributionList.js')
+	, email	= require('emailjs')
+	, emailconfig = require('./lib/config/email.js')
+	, distro 	= require('./lib/emailDistributionList/distributionList.js')
+	, f = require('./lib/format.js')
+	, server 	= email.server.connect(emailconfig)
 	, data = ''
-	, fileDir 		= './../csv'
+	, fileDir = './../csv'
 	;
 
 var email = function(file){
-	readData(file);
-};
-
-var readData = function(file) {
-  var fileStream        = fs.createReadStream(path.join(fileDir, file + '.csv'));
-  fileStream.on('data', function(chunk) { data+=chunk; });
-  fileStream.on('end', function(){
-    generateTable(data, file, function(table){
-    	composeEmailHTML(table, file);
-    });
-  });
-};
-
-var formatNumber = function (number){
-	var number = number.toFixed(2) + '';
-	var x = number.split('.');
-	var x1 = x[0];
-	var x2 = x.length > 1 ? '.' + x[1] : '';
-	var rgx = /(\d+)(\d{3})/;
-	while (rgx.test(x1)) {
-	    x1 = x1.replace(rgx, '$1' + ',' + '$2');
-	}
-	return x1;
-};
-
-var isDate = function(date) {
-	return (new Date(date) !== "Invalid Date" && !isNaN(new Date(date)) ) ? true : false;
-};
-
-var formatDate = function(date) {
-	return new Date(date).toISOString().slice(0,10);
-};
-
-var hasDecimalString = function(number){
-	var regex = /%/
-	return regex.test(number) ;
-};
-
-var generateTable = function(data, file, cb) {
-	var lines = data.split("\n"),
-		table = [];
-
-	for (var i = 0; i < lines.length; i++) {
-		if (i === 0) { // headers
-	    table.push('<tr><th>'+ lines[i].split(",").join('</th><th>')+ '</th></tr>');
-		} else { // data
-			line = lines[i].split(",");
-
-			// Format Numbers
-			line.map(function(item, index){
-				if ( !isNaN(parseFloat(item)) && !hasDecimalString(item) ) {
-					return line[index] = formatNumber(parseInt(item));
-				} else if ( isDate(item) && !hasDecimalString(item) ) {
-					return line[index] = formatDate(item);
-				}
+	readData(file, function(){
+		f.generateTable(data, file, function(table){
+			composeEmailHTML(table, file, function(message){
+				// console.log(message);
+				sendEmail(message);
 			});
-
-			table.push('<tr><td align="center">'+ line.join('</td><td align="center">')+ '</td></tr>');
-		}
-	}
-	table = '<table border="2" cellspcing="1" cellpadding="1">' + table.join("") + '</table>';
-
-	cb(table, file);
+		});
+	});
 };
 
+var readData = function(file, cb) {
+	var fileStream        = fs.createReadStream(path.join(fileDir, file + '.csv'));
+	fileStream.on('data', function(chunk) { data+=chunk; });
+	fileStream.on('end', function(){
+		cb()
+	});
+};
 
-var composeEmailHTML = function(table, file){
+var composeEmailHTML = function(table, file, cb){
 	var arr = ['You are receiving an automated message', // body
 		distro[file], // distro
 		'Data ready: '+file, // subject
@@ -84,6 +37,7 @@ var composeEmailHTML = function(table, file){
 	];
 
 	var text = arr[0], to = arr[1], subject = arr[2], attachment = arr[3];
+
 	var message = {
 		text: text,
 		from: 'John Skilbeck jskilbeck@yapstone.com',
@@ -95,7 +49,7 @@ var composeEmailHTML = function(table, file){
 		]
 	};
 
-	sendEmail(message);
+	cb(message);
 };
 
 var sendEmail = function(message){

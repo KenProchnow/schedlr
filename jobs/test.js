@@ -9,7 +9,7 @@ var
 if (html) { var email = require('./../email.js').email; } else { var email = require('./../lib/email_library/email.js').email; };
  
 parse(file, function(sql){
-	query(sql, file, function(result){
-		email(file);	
+	query(sql, file, function(data, file){
+		email(data, file);	
 	});
 });

@@ -6,30 +6,18 @@ var
 	, distro 	= require('./lib/emailDistributionList/distributionList.js')
 	, f = require('./lib/format.js')
 	, server 	= email.server.connect(emailconfig)
-	, data = ''
 	, fileDir = './../csv'
 	;
 
-var email = function(file){
-	readData(file, function(){
-		f.generateTable(data, file, function(table){
-			composeEmailHTML(table, file, function(message){
-				// console.log(message);
-				sendEmail(message);
-			});
+var email = function(data, file){
+	f.generateTableJSON(data, file, function(table){
+		composeEmail(table, file, function(message){
+			sendEmail(message);
 		});
 	});
 };
 
-var readData = function(file, cb) {
-	var fileStream        = fs.createReadStream(path.join(fileDir, file + '.csv'));
-	fileStream.on('data', function(chunk) { data+=chunk; });
-	fileStream.on('end', function(){
-		cb()
-	});
-};
-
-var composeEmailHTML = function(table, file, cb){
+var composeEmail = function(table, file, cb){
 	var arr = ['You are receiving an automated message', // body
 		distro[file], // distro
 		'Data ready: '+file, // subject

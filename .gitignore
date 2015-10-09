@@ -20,6 +20,7 @@ out.xlsx
 
 Ignore the stuff in the public directory except for ...
 # public/
-lib/
+lib/config
+lib/emailDistributionList
 
 # Unless they match this file path

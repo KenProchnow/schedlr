@@ -71,11 +71,26 @@ module.exports = {
 `$ crontab -e`
 
 ````
-* 12 * * * * node jobs/daily_tpv.js 
+* 12 * * * * node jobs/daily_tpv.js > /dev/null 2>&1
 ````
 
 Cron format is, [which] `minute(0-59) hour(0-23) [day of month(1 - 31)] month(1-12) [day of week(0-6)]`
 
+`> /dev/null 2>&1`
 
+- `>`: redirects output (`stdout`)
+- `/dev/null`: is path (`/dev/null` being throw away path)
+- `2`: `stderr`
+- `>&`: redirect stream to another file descriptor... 0 is `stdin`, 1 is `stdout`, 2 is `stderr`
+- `&1`: redirects `stderr` to `stdout`
+
+### Crontab file
+
+````
+MAILTO='jskilbeck@yapstone.com'
+
+* 12 * * * * node jobs/daily_tpv.js > /dev/null
+
+````
 
 

@@ -18,7 +18,7 @@ var runQuery = function(sql, file, cb) {
 		var r = new mssql.Request(connection);
 		r.query(sql, function(err, results){
 			if (err) console.log(err);
-			f.transform(results, file, cb);
+			transform(results, file, cb);
 		});
 	});
 };
@@ -30,7 +30,7 @@ var transform = function(data, file, cb){
 				data[record][item] = f.formatDate(data[record][item]);
 			}
 
-			if ( ( !f.isDateColumn(item) ) && ( !f.isExludeColumn(item) ) && ( !isNaN(parseFloat(data[record][item])) ) && ( !f.hasPercentString(data[record][item]) ) ) { // format numbers
+			if ( ( !f.isDateColumn(item) ) && ( !f.isExcludeColumn(item) ) && ( !isNaN(parseFloat(data[record][item])) ) && ( !f.hasPercentString(data[record][item]) ) ) { // format numbers
 				data[record][item] = f.formatNumber(parseInt(data[record][item]));
 			}	}
 		}	}

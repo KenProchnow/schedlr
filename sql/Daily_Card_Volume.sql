@@ -59,6 +59,10 @@ where    1 = 1
      )     
      and txn.ProcessorId not in (14,16)                   
      and txn.TransactionCycleId in (1) 
+     and ( case when txn.paymenttypeid in (1, 2, 3, 11, 12, /* <-- regular cards */ /* pre 2012 debit networks --> */  6,7,8,9) then 1
+			when txn.PaymentTypeId in (10) and txn.ProcessorId in (22) and txn.Ref_BatchTypeId in (1) /* Amex , Bucket , Vantiv = Processing */ then 1
+		else 0 end
+     ) = 1
      and txn.PlatformId in (1,2,3,4) -- No HA-Intl for now       
 group by
      case when txn.PostDate_R between @start and @end then cast(@end as varchar)
@@ -84,6 +88,10 @@ where    1 = 1
      )     
      and txn.ProcessorId not in (14,16)                   
      and txn.TransactionCycleId in (1) 
+     and ( case when txn.paymenttypeid in (1, 2, 3, 11, 12, /* <-- regular cards */ /* pre 2012 debit networks --> */  6,7,8,9) then 1
+			when txn.PaymentTypeId in (10) and txn.ProcessorId in (22) and txn.Ref_BatchTypeId in (1) /* Amex , Bucket , Vantiv = Processing */ then 1
+		else 0 end
+     ) = 1
      and txn.PlatformId in (1,2,3,4) -- No HA-Intl for now       
 group by
      case when txn.PostDate_R between @startMTD and @end then 'MTD'
@@ -109,6 +117,10 @@ where    1 = 1
      )     
      and txn.ProcessorId not in (14,16)                   
      and txn.TransactionCycleId in (1) 
+     and ( case when txn.paymenttypeid in (1, 2, 3, 11, 12, /* <-- regular cards */ /* pre 2012 debit networks --> */  6,7,8,9) then 1
+			when txn.PaymentTypeId in (10) and txn.ProcessorId in (22) and txn.Ref_BatchTypeId in (1) /* Amex , Bucket , Vantiv = Processing */ then 1
+		else 0 end
+     ) = 1
      and txn.PlatformId in (1,2,3,4) -- No HA-Intl for now       
 group by
      case when txn.PostDate_R between @startYTD and @end then 'YTD'

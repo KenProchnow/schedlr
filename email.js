@@ -3,7 +3,7 @@ var
 	, path = require('path')
 	, email	= require('emailjs')
 	, emailconfig = require('./lib/config/email.js')
-	, distro 	= require('./lib/emailDistributionList/distributionList.js')
+	, distro 	= require('./lib/distribution.js')
 	, f = require('./lib/format.js')
 	, server 	= email.server.connect(emailconfig)
 	, fileDir = './../csv'
@@ -18,9 +18,10 @@ var email = function(data, file){
 };
 
 var composeEmail = function(table, file, cb){
-	var arr = ['You are receiving an automated message', // body
+	var now = new Date();
+	var arr = ['Automated report generated on: '+now.toString().slice(0,21), // body
 		distro[file], // distro
-		'Data ready: '+file, // subject
+		file +' : Yapstone BI Reports', // subject
 		file+'.csv' // attachment
 	];
 
@@ -32,7 +33,7 @@ var composeEmail = function(table, file, cb){
 		to: 	to,
 		subject: subject,
 		attachment: [
-			{ data: '<html><body><p>Automated Email</p><br />'+table+'</body></html>', alternative:true},
+			{ data: '<html><body><p>'+text+'</p><br />'+table+'</body></html>', alternative:true},
 			{ path: path.join(fileDir,attachment), type: 'text/csv', name: attachment	}
 		]
 	};

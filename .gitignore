@@ -21,6 +21,6 @@ out.xlsx
 Ignore the stuff in the public directory except for ...
 # public/
 lib/config
-lib/emailDistributionList
+lib/distribution.js
 
 # Unless they match this file path

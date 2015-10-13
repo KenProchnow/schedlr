@@ -3,7 +3,7 @@ var
   query = require('./../query.js').executeQuery,
   format = require('./../lib/format.js').cleanData,
   html = true, // send results as html?
-  file = 'Daily_TPV'
+  file = 'Daily_Card_Volume'
   ; 
 
 if (html) { var email = require('./../email.js').email; } else { var email = require('./../lib/email_library/email.js').email; }

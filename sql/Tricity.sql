@@ -151,11 +151,40 @@ group by
        txn.ChildName
       , Capacity
 ---original was trashing precision, is  formatted in SSRS, took to 4 for acccuracy
+
+if object_id('tempdb..#ChildLevel') is not null drop table #ChildLevel
+select * into #ChildLevel from (
 select 
        *
       , convert(decimal(10,4)   
        ,case when Capacity <> 0 and Distinct_Users_Transacting <> 0 
-        then cast(Distinct_Users_Transacting as decimal(10,4))/ cast(Capacity as decimal(10,4))  else 0 end) as [%] 
-        
+        then cast(Distinct_Users_Transacting as decimal(10,4))/ cast(Capacity as decimal(10,4))  else 0 end)*100 as [%] 
 from #Children
+) src
 order by ChildName asc
+
+if object_id('tempdb..#Rollup') is not null drop table #Rollup
+select * into #Rollup from (
+  select 
+       'Total' Name
+       ,sum(case when PaymentType in ('Credit') then Txn_Amount else 0 end) Credit_Volume
+       ,sum(case when PaymentType in ('Credit') then Txn_Count else 0 end) Credit_Count
+       ,sum(case when PaymentType in ('Debit') then Txn_Amount else 0 end) Debit_Volume
+       ,sum(case when PaymentType in ('Debit') then Txn_Count else 0 end) Debit_Count       
+       ,sum(case when PaymentType in ('ACH') then Txn_Amount else 0 end) ACH_Volume   
+       ,sum(case when PaymentType in ('ACH') then Txn_Count else 0 end) ACH_Count     
+       ,sum(case when PaymentType in ('Scan') then Txn_Amount else 0 end) Scan_Volume 
+       ,sum(case when PaymentType in ('Scan') then Txn_Count else 0 end) Scan_Count   
+       ,sum(Txn_Amount) Total_Volume
+       ,sum(Txn_Count) Total_Count
+       ,sum(PeopleTransacting) as Distinct_Users_Transacting
+       ,sum(Capacity) Capacity
+       ,cast(sum(PeopleTransacting) as decimal(10,4))/cast(sum(Capacity) as decimal(10,4))*100 [%]
+  from #Report txn
+    inner join #Capacity c on txn.PlatformId = c.PlatformId and txn.ChildAccountId = c.ChildAccountId 
+  where  Vertical in ('Rent','Dues')
+) src
+
+select * from #ChildLevel
+union all
+select * from #Rollup

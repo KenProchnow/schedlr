@@ -9,15 +9,15 @@ var
 	, fileDir = './../csv'
 	;
 
-var email = function(data, file){
-	f.generateTableJSON(data, file, function(table){
-		composeEmail(table, file, function(message){
+var email = function(data, folder, file){
+	f.generateTableJSON(data, folder, file, function(table){
+		composeEmail(table, folder, file, function(message){
 			sendEmail(message);
 		});
 	});
 };
 
-var composeEmail = function(table, file, cb){
+var composeEmail = function(table, folder, file, cb){
 	var now = new Date();
 	var arr = ['Automated report generated on: '+now.toString().slice(0,21), // body
 		distro[file], // distro
@@ -34,7 +34,7 @@ var composeEmail = function(table, file, cb){
 		subject: subject,
 		attachment: [
 			{ data: '<html><body><p>'+text+'</p><br />'+table+'</body></html>', alternative:true},
-			{ path: path.join(fileDir,attachment), type: 'text/csv', name: attachment	}
+			{ path: path.join(fileDir,folder,attachment), type: 'text/csv', name: attachment	}
 		]
 	};
 

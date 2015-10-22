@@ -2,14 +2,14 @@ var
 	fs 	= require('fs')				
 	, path = require('path')
 	, data = ''
-	, fileDir = './../sql'
+	, fileDir = './../../sql'
 	;
 
 var parseSQL = function(folder, file, cb){ 
 	parseFile(folder, file, cb); 
 };
 
-var parseFile = function(file, cb){
+var parseFile = function(folder, file, cb){
 	var sqlFile 		= fs.createReadStream(path.join(fileDir, folder, file + '.sql'));
 
 	sqlFile.on('data', function(chunk){ data+=chunk; });

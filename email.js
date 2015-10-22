@@ -6,7 +6,7 @@ var
 	, distro 	= require('./lib/distribution.js')
 	, f = require('./lib/format.js')
 	, server 	= email.server.connect(emailconfig)
-	, fileDir = './../csv'
+	, fileDir = './../../csv'
 	;
 
 var email = function(data, folder, file){

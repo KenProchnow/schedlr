@@ -10,7 +10,7 @@ var
 if (html) { var email = require('./../../email.js').email; } else { var email = require('./../../lib/email_library/email.js').email; }
  
 parse(folder, file, function(sql){
-  query(sql, file, function(data, file){
-    email(data, file);  
+  query(sql, folder, file, function(data, folder, file){
+    email(data, folder, file);  
   });
 });

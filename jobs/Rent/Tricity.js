@@ -3,13 +3,14 @@ var
   query = require('./../../query.js').executeQuery,
   format = require('./../../lib/format.js').cleanData,
   html = false, // send results as html?
+  folder = 'Rent',
   file = 'Tricity'
   ; 
 
 if (html) { var email = require('./../../email.js').email; } else { var email = require('./../../lib/email_library/email.js').email; }
  
-parse(file, function(sql){
-  query(sql, file, function(data, file){
-    email(data, file);  
+parse(folder, file, function(sql){
+  query(sql, folder, file, function(data, folder, file){
+    email(data, folder, file);  
   });
 });

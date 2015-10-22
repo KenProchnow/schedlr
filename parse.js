@@ -2,7 +2,7 @@ var
 	fs 	= require('fs')				
 	, path = require('path')
 	, data = ''
-	, fileDir = './../../sql'
+	, fileDir = './../sql'
 	;
 
 var parseSQL = function(folder, file, cb){ 

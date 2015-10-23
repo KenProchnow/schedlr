@@ -2,7 +2,7 @@ var
   parse = require('./../../parse.js').parseSQL,
   query = require('./../../query.js').executeQuery,
   format = require('./../../lib/format.js').cleanData,
-	html = true, // send results as html?
+	html = false, // send results as html?
   folder = 'Misc',
   file = 'test'
   ; 

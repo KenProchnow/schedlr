@@ -85,7 +85,7 @@ select Date,src.CharCode,CurrencyId,isnull(src.Rate,fallback.Rate) Rate  into #R
 if object_id('tempdb..#Yesterday') is not null drop table #Yesterday
 select
      case when txn.PostDate_R between @start and @end then cast(@end as varchar) end as Date ,
-    case when txn.ProcessorId not in (14,16) then c.Vertical else 'GatewayOnly' end as Vertical,        
+    case when txn.ProcessorId not in (14,16) then c.Vertical else 'GtwyOnly' end as Vertical,        
     sum(txn.amount * fx.Rate) as TPV
     into #Yesterday
 from                     
@@ -101,7 +101,7 @@ where    1 = 1
      and txn.PlatformId in (1,2,3,4) -- No HA-Intl for now       
 group by
      case when txn.PostDate_R between @start and @end then cast(@end as varchar) end , 
-     case when txn.ProcessorId not in (14,16) then c.Vertical else 'GatewayOnly' end
+     case when txn.ProcessorId not in (14,16) then c.Vertical else 'GtwyOnly' end
       
       
 if object_id('tempdb..#MTD') is not null drop table #MTD
@@ -109,7 +109,7 @@ select
      case when txn.PostDate_R between @startMTD and @end then 'MTD'
              when txn.PostDate_R between @lyStart_MTD and @lyEnd_MTD then 'lyMTD'
      end as Date ,
-    case when txn.ProcessorId not in (14,16) then c.Vertical else 'GatewayOnly' end as Vertical,     
+    case when txn.ProcessorId not in (14,16) then c.Vertical else 'GtwyOnly' end as Vertical,     
     sum(txn.amount * fx.Rate) as TPV
     into #MTD
 from                     
@@ -128,14 +128,14 @@ group by
      case when txn.PostDate_R between @startMTD and @end then 'MTD'
              when txn.PostDate_R between @lyStart_MTD and @lyEnd_MTD then 'lyMTD'
      end ,
-     case when txn.ProcessorId not in (14,16) then c.Vertical else 'GatewayOnly' end
+     case when txn.ProcessorId not in (14,16) then c.Vertical else 'GtwyOnly' end
       
 if object_id('tempdb..#YTD') is not null drop table #YTD
 select
      case when txn.PostDate_R between @startYTD and @end then 'YTD'
              when txn.PostDate_R between @lyStart_YTD and @lyEnd_YTD then 'lyYTD'
      end as Date ,
-    case when txn.ProcessorId not in (14,16) then c.Vertical else 'GatewayOnly' end as Vertical ,       
+    case when txn.ProcessorId not in (14,16) then c.Vertical else 'GtwyOnly' end as Vertical ,       
     sum(txn.amount * fx.Rate) as TPV
     into #YTD
 from                     
@@ -154,13 +154,13 @@ group by
      case when txn.PostDate_R between @startYTD and @end then 'YTD'
              when txn.PostDate_R between @lyStart_YTD and @lyEnd_YTD then 'lyYTD'
      end ,
-     case when txn.ProcessorId not in (14,16) then c.Vertical else 'GatewayOnly' end
+     case when txn.ProcessorId not in (14,16) then c.Vertical else 'GtwyOnly' end
 union
 select
-  'lyYTD' as Date, 'ExternalGateway' as Vertical, 104531992 as TPV 
+  'lyYTD' as Date, 'ExtrnlGtwy' as Vertical, 104531992 as TPV 
 union
 select
-  'YTD' as Date , 'ExternalGateway' as Vertical, 103164891 as TPV
+  'YTD' as Date , 'ExtrnlGtwy' as Vertical, 103164891 as TPV
  
 if object_id('tempdb..#txn') is not null drop table #txn
 select * into #txn from (

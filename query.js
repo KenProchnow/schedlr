@@ -5,7 +5,7 @@ var
 	, mssql = require('mssql')
 	, db_config = require('./lib/config/database.js')
 	, f = require('./lib/format.js')
-	, outDir = './csv'
+	, outDir = './../../csv'
 	;
 
 var executeQuery = function(sql, folder, file, cb) {

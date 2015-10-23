@@ -1,13 +1,13 @@
 var 
-  parse = require('./../parse.js').parseSQL,
-  query = require('./../query.js').executeQuery,
-  format = require('./../lib/format.js').cleanData,
+  parse = require('./../../parse.js').parseSQL,
+  query = require('./../../query.js').executeQuery,
+  format = require('./../../lib/format.js').cleanData,
   html = true, // send results as html?
   folder = 'Daily',
   file = 'Daily_TPV'
   ; 
 
-if (html) { var email = require('./../email.js').email; } else { var email = require('./../lib/email_library/email.js').email; }
+if (html) { var email = require('./../../email.js').email; } else { var email = require('./../../lib/email_library/email.js').email; }
  
 parse(folder, file, function(sql){
   query(sql, folder, file, function(data, folder, file){

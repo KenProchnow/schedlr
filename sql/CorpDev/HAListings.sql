@@ -198,16 +198,16 @@ order by  Year , Month, cast(dateadd(d, -1 , dateadd(mm, (year(txn.PostDate_R) -
 
 if object_id('tempdb..#HA_Analytics_HA_Report') is not null drop table #HA_Analytics_HA_Report
 select
-	HA.Year, HA.Month, HA.Date, HA.Vertical, HA.CharCode, HA.Product_Type, HA.TPV_Net, sum(HA.Revenue_Net + isnull(Anc.Revenue,0)) Revenue_Net, 
-	HA.TPV_Net_USD, sum(HA.Revenue_Net + isnull(Anc.Revenue,0)) Revenue_Net_USD, HA.Txn_Count , HA.Credit_Card_TPV_Net_USD, HA.#of_Merchants
+	HA.Year, HA.Month, HA.Date, HA.Vertical, HA.CharCode, HA.Product_Type, HA.TPV, sum(HA.Revenue + isnull(Anc.Revenue,0)) Revenue, 
+	HA.TPV_USD, sum(HA.Revenue + isnull(Anc.Revenue,0)) Revenue_USD, HA.Txn_Count , HA.Credit_Card_TPV_USD, HA.#of_Merchants
 	into #HA_Analytics_HA_Report
 from 
 	#HA_Analytics_HA HA
 	left join #Ancillary_Revenue Anc on HA.Year = Anc.Year and HA.Month = Anc.Month 
 		and HA.Product_Type = Anc.Product_Type and HA.Vertical = Anc.Vertical
 group by
-	HA.Year, HA.Month, HA.Date, HA.Vertical, HA.CharCode, HA.Product_Type, HA.TPV_Net, 
-	HA.TPV_Net_USD, HA.Txn_Count , HA.Credit_Card_TPV_Net_USD, HA.#of_Merchants
+	HA.Year, HA.Month, HA.Date, HA.Vertical, HA.CharCode, HA.Product_Type, HA.TPV, 
+	HA.TPV_USD, HA.Txn_Count , HA.Credit_Card_TPV_USD, HA.#of_Merchants
 
 
 
@@ -313,4 +313,9 @@ from #HA_Analytics_HA_Report
 union
 select * 
 from #HA_Analytics_GD1
+
+
+
+
+
 

@@ -1,0 +1,32 @@
+PATH=/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/skilbjo/.local/bin:/home/skilbjo/bin
+MAILTO=jskilbeck@yapstone.com
+DIRECTORY="/home/skilbjo/code/node/app/schedlr/jobs/"
+RENT="/home/skilbjo/code/node/app/schedlr/jobs/Rent"
+MISC="/home/skilbjo/code/node/app/schedlr/jobs/Misc"
+DAILY="/home/skilbjo/code/node/app/schedlr/jobs/Daily"
+
+### Daily
+## TPV reports
+0 19 * * 2-6 cd $DAILY ; node Daily_TPV.js >/dev/null
+1 19 * * 2-6 cd $DAILY ; node Daily_Card_Volume.js >/dev/null
+
+### Testing
+35 17 * * * cd $DAILY ; node test_Daily_TPV.js >/dev/null
+35 17 * * * cd $DAILY ; node test_Daily_Card_Volume.js >/dev/null
+
+### Weekly
+
+
+
+### Monthly
+## Rent & Account Management reports
+0 12 10 * * cd $RENT ; node Tricity.js >/dev/null
+0 19 3 * * cd $RENT ; node AdHoc_Request.js >/dev/null
+5 17 3 * * cd $RENT ; node PenetrationRate.js >/dev/null
+5 17 3 * * cd $RENT ; node PeopleTransacting.js >/dev/null
+
+### Testing
+15 * * * * cd $MISC ; node test.js >/dev/null
+#1 * * * * cd $MISC ; node test1.js >/dev/null
+#* * * * * cd $DIRECTORY ; echo 'Hello'
+

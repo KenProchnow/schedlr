@@ -19,7 +19,7 @@ select * into #Dates from (
                from YapstoneDM..Currency
                group by Currency.CharCode, Currency.CurrencyId
        ) c
-       where  txn.PostDate_R between @stat and @end
+       where  txn.PostDate_R between @start and @end
        group by txn.PostDate_R , c.CharCode, c.CurrencyId
 ) src
  
@@ -28,7 +28,7 @@ if object_id('tempdb..#EURUSD') is not null                drop table #EURUSD
 select fx.Date, fx.ExchangeRate                                           into #EURUSD                
 from YapstoneDM..CurrencyExchangeRate fx
 where  BaseCurrencyId in (1) and fx.CounterCurrencyId in (3)
-     and (   fx.Date between @stat and @end  )
+     and (   fx.Date between @start and @end  )
 group by fx.Date, fx.ExchangeRate
 if object_id('tempdb..#RatesPREPROCESSED') is not null                 drop table #RatesPREPROCESSED
 select * into #RatesPREPROCESSED from (
@@ -37,7 +37,7 @@ select * into #RatesPREPROCESSED from (
      from #Dates d left join YapstoneDM..CurrencyExchangeRate fx  on d.Date = fx.Date
                left join YapstoneDM..Currency on fx.CounterCurrencyId = Currency.CurrencyId
                left join #EURUSD usd on fx.Date = usd.Date
-     where  (   d.Date between @stat and @end )
+     where  (   d.Date between @start and @end )
      group by  isnull(fx.Date,d.Date) , isnull(Currency.CharCode,d.CharCode) , isnull(Currency.CurrencyId,d.CurrencyId)
                       , 1 / ( fx.ExchangeRate / usd.ExchangeRate )
      union
@@ -46,7 +46,7 @@ select * into #RatesPREPROCESSED from (
                and BaseCurrencyId in (1) and fx.CounterCurrencyId in (3)
                left join YapstoneDM..Currency on fx.CounterCurrencyId = Currency.CurrencyId
        where  d.CurrencyId in (1)
-               and  (   d.Date between @stat and @end  )
+               and  (   d.Date between @start and @end  )
        group by isnull(fx.Date,d.Date) , d.CharCode, d.CurrencyId, fx.ExchangeRate
 ) src
 order by Date asc
@@ -313,15 +313,4 @@ from #HA_Analytics_HA_Report
 union
 select * 
 from #HA_Analytics_GD1
-
-
-
-
-
-
-
-
-
-
-
 

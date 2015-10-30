@@ -1,9 +1,10 @@
 PATH=/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/skilbjo/.local/bin:/home/skilbjo/bin
 MAILTO=jskilbeck@yapstone.com
 DIRECTORY="/home/skilbjo/code/node/app/schedlr/jobs/"
-RENT="/home/skilbjo/code/node/app/schedlr/jobs/Rent"
-MISC="/home/skilbjo/code/node/app/schedlr/jobs/Misc"
 DAILY="/home/skilbjo/code/node/app/schedlr/jobs/Daily"
+RENT="/home/skilbjo/code/node/app/schedlr/jobs/Rent"
+CORPDEV="/home/skilbjo/code/node/app/schedlr/jobs/CorpDev"
+MISC="/home/skilbjo/code/node/app/schedlr/jobs/Misc"
 
 ### Daily
 ## TPV reports
@@ -25,8 +26,11 @@ DAILY="/home/skilbjo/code/node/app/schedlr/jobs/Daily"
 5 17 3 * * cd $RENT ; node PenetrationRate.js >/dev/null
 5 17 3 * * cd $RENT ; node PeopleTransacting.js >/dev/null
 
+## Corp Dev
+0 16 30 * * cd $CORPDEV ; node HAListings.js >/dev/null
+
+
 ### Testing
-15 * * * * cd $MISC ; node test.js >/dev/null
+#15 * * * * cd $MISC ; node test.js >/dev/null
 #1 * * * * cd $MISC ; node test1.js >/dev/null
 #* * * * * cd $DIRECTORY ; echo 'Hello'
-

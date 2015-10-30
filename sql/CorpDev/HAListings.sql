@@ -179,7 +179,7 @@ select year(txn.PostDate_R) Year , month(txn.PostDate_R) Month ,
 	sum(txn.Amount) as TPV,  sum(txn.AmtNetPropFee) as Revenue, 
 	sum(txn.Amount) as TPV_USD,  sum(txn.AmtNetPropFee) as Revenue_USD,
 	count(*) as Txn_Count,
-	sum(case when txn.PaymentTypeId in (1,2,3) then txn.Amount else 0 end) as Credit_Card_TPV_Net_USD,
+	sum(case when txn.PaymentTypeId in (1,2,3) then txn.Amount else 0 end) as Credit_Card_TPV_USD,
 	count(distinct(c.AccountId)) #of_Merchants
 	into #HA_Analytics_HA
 from                                            
@@ -288,11 +288,9 @@ select year(txn.PostDate_R) Year , month(txn.PostDate_R) Month ,
 	case when PPB.IdClassId is not null then 'PPB'  else 'PPS' end   Product_Type ,  
 	sum(txn.Amount) as TPV,  sum(txn.AmtNetPropFee) as Revenue,  
 	sum(txn.Amount * fx.Rate) as TPV_USD,
-	sum(txn.AmtNetPropFee * fx.Rate ) as Revenue_USS, 
+	sum(txn.AmtNetPropFee ) as Revenue_USD, 
 	count(*) as Txn_Count ,
-	sum(case when txn.PaymentTypeId in (1,2,3) then txn.Amount else 0 end
-	* case when Currency.CharCode in ('EUR') then 1.35 when Currency.CharCode in ('GBP') then 1.6 when Currency.CharCode in ('CAD') then 0.9 else 1 end
-	) as Credit_Card_TPV_Net_USD,
+	sum(case when txn.PaymentTypeId in (1,2,3) then txn.Amount else 0 end * fx.Rate) as Credit_Card_TPV_USD,
 	count(distinct(c.AccountId)) #of_Merchants
 	into #HA_Analytics_GD1
 from                                            

@@ -106,7 +106,7 @@ from
    inner join #Rates fx on  txn.PostDate_R = fx.Date and txn.CurrencyId = fx.CurrencyId
 where
         txn.ProcessorId not in (14,16)
-        and txn.TransactionCycleId in (1)     
+        and txn.TransactionCycleId in (1,3,4,9,16)     
         and txn.PaymentTypeId not in (14,16) -- no cash  
         and txn.PostDate_R between  @start and @end 
         --and c.ParentAccountId = '75-92131049'

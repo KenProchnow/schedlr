@@ -91,7 +91,6 @@ group by
 	Eligible.StreetAddress, Eligible.City,Eligible.State, Eligible.Zip,
 	c.ChildAccountId, ha.propertyId 
 	
-	
 select 
 	PropertyOwnerAccountId, PropertyOwnerName, StreetAddress, City, State, Zip,
 	stuff((select cast(', '+ cast(HomeawayPropertyId as varchar(max)) as varchar(max))
@@ -100,3 +99,5 @@ select
 		for xml path('')),1,2,'') as PropertyId
 from 
 	#Report Report
+group by 
+	PropertyOwnerAccountId, PropertyOwnerName, StreetAddress, City, State, Zip 

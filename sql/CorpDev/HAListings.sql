@@ -191,7 +191,7 @@ where
 	txn.PostDate_R between @start and @end 
 	and txn.PlatformId in (3)
 	and txn.ProcessorId not in (14,16)
-	and txn.PaymentTypeId in (1,2,3,11,12)
+	-- and txn.PaymentTypeId in (1,2,3,11,12)
 	and txn.TransactionCycleId in (1)
 group by year(txn.PostDate_R) , month(txn.PostDate_R) ,  
 	case when PPB.IdClassId is not null then 'PPB' when Ancillary.IdClassId is not null then 'Ancillary' else 'PPS' end   
@@ -304,7 +304,7 @@ where
 	txn.PostDate_R between @start and @end 
 	and txn.ProcessorId not in (14,16)
 	and txn.PlatformId in (4)
-	and txn.PaymentTypeId in (1,2,3,11,12)
+	-- and txn.PaymentTypeId in (1,2,3,11,12)
 	and txn.TransactionCycleId in (1)
 group by year(txn.PostDate_R) , month(txn.PostDate_R) ,  cast(dateadd(d, -1 , dateadd(mm, (year(txn.PostDate_R) - 1900) * 12 + month(txn.PostDate_R) , 0)) as date) , Currency.CharCode ,
        case when PPB.IdClassId is not null then 'PPB' else 'PPS' end   

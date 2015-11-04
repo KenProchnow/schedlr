@@ -96,7 +96,7 @@ from
 where    1 = 1                
      and ( txn.PostDate_R between @start and @end
      )     
-     --and txn.ProcessorId not in (14,16)                   
+     and txn.ProcessorId not in (16)                   
      and txn.TransactionCycleId in (1) 
      and txn.PlatformId in (1,2,3,4) -- No HA-Intl for now       
 group by
@@ -121,7 +121,7 @@ where    1 = 1
      and ( txn.PostDate_R between @startMTD and @end or
              txn.PostDate_R between @lyStart_MTD and @lyEnd_MTD
      )     
-     --and txn.ProcessorId not in (14,16)                   
+     and txn.ProcessorId not in (16)                   
      and txn.TransactionCycleId in (1) 
      and txn.PlatformId in (1,2,3,4) -- No HA-Intl for now       
 group by
@@ -147,7 +147,7 @@ where    1 = 1
      and ( txn.PostDate_R between @startYTD and @end or
              txn.PostDate_R between @lyStart_YTD and @lyEnd_YTD
      )     
-     --and txn.ProcessorId not in (14,16)                   
+     and txn.ProcessorId not in (16)                   
      and txn.TransactionCycleId in (1) 
      and txn.PlatformId in (1,2,3,4) -- No HA-Intl for now       
 group by
@@ -157,10 +157,10 @@ group by
      case when txn.ProcessorId not in (14,16) then c.Vertical else 'GtwyOnly' end
 union
 select
-  'lyYTD' as Date, 'ExtrnlGtwy' as Vertical, 104531992 as TPV 
+  'lyYTD' as Date, 'ExtrnlGtwy' as Vertical, 114725177 as TPV 
 union
 select
-  'YTD' as Date , 'ExtrnlGtwy' as Vertical, 103164891 as TPV
+  'YTD' as Date , 'ExtrnlGtwy' as Vertical, 114934953 as TPV
  
 if object_id('tempdb..#txn') is not null drop table #txn
 select * into #txn from (
@@ -179,8 +179,8 @@ set @dates = stuff((select ',' + quotename(convert(varchar(10),colName)) from (
  
 set @query = '
 select Vertical, '+quotename(@end)+' as '+quotename(@end)+',  
-  MTD, cast(cast(round((MTD/lyMTD -1)*100,2) as decimal(18,2)) as varchar)+''%'' as [MTD YoY],  
-  YTD, cast(cast(round((YTD/lyYTD -1)*100,2) as decimal(18,2)) as varchar)+''%'' as [YTD YoY]
+  MTD, cast(cast(isnull(round((MTD/lyMTD -1)*100,2),100) as decimal(18,2)) as varchar)+''%'' as [MTD YoY],  
+  YTD, cast(cast(isnull(round((YTD/lyYTD -1)*100,2),100) as decimal(18,2)) as varchar)+''%'' as [YTD YoY]
   into #Vertical
 from (
 select * from (
@@ -197,8 +197,8 @@ pivot (
 
 set @total = '
 select ''Total'' as Vertical, '+quotename(@end)+' as '+quotename(@end)+',  
-  MTD, cast(cast(round((MTD/lyMTD -1)*100,2) as decimal(18,2)) as varchar)+''%'' as [MTD YoY],  
-  YTD, cast(cast(round((YTD/lyYTD -1)*100,2) as decimal(18,2)) as varchar)+''%'' as [YTD YoY]
+  MTD, cast(cast(isnull(round((MTD/lyMTD -1)*100,2),100) as decimal(18,2)) as varchar)+''%'' as [MTD YoY],  
+  YTD, cast(cast(isnull(round((YTD/lyYTD -1)*100,2),100) as decimal(18,2)) as varchar)+''%'' as [YTD YoY]
   into #Total
 from (
 select * from (

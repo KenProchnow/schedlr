@@ -13,7 +13,6 @@ set @lyEnd_MTD = dateadd(yy,-1, @end)
 set @lyStart_YTD = dateadd(yy,-1,@startYTD)
 set @lyEnd_YTD = dateadd(yy,-1, @end)
  
- 
 
 if object_id('tempdb..#CurrencyCodes') is not null drop table #CurrencyCodes
 select Currency.CharCode, Currency.CurrencyId into #CurrencyCodes
@@ -98,8 +97,8 @@ where    1 = 1
      and txn.ProcessorId not in (14,16)                   
      and txn.TransactionCycleId in (1) 
      and ( case when txn.paymenttypeid in (1, 2, 3, 11, 12, /* <-- regular cards */ /* pre 2012 debit networks --> */  6,7,8,9) then 1
-			when txn.PaymentTypeId in (10) and txn.ProcessorId in (22) and txn.Ref_BatchTypeId in (1) /* Amex , Bucket , Vantiv = Processing */ then 1
-		else 0 end
+      when txn.PaymentTypeId in (10) and txn.ProcessorId in (22) and txn.Ref_BatchTypeId in (1) /* Amex , Bucket , Vantiv = Processing */ then 1
+    else 0 end
      ) = 1
      and txn.PlatformId in (1,2,3,4) -- No HA-Intl for now       
 group by
@@ -127,8 +126,8 @@ where    1 = 1
      and txn.ProcessorId not in (14,16)                   
      and txn.TransactionCycleId in (1) 
      and ( case when txn.paymenttypeid in (1, 2, 3, 11, 12, /* <-- regular cards */ /* pre 2012 debit networks --> */  6,7,8,9) then 1
-			when txn.PaymentTypeId in (10) and txn.ProcessorId in (22) and txn.Ref_BatchTypeId in (1) /* Amex , Bucket , Vantiv = Processing */ then 1
-		else 0 end
+      when txn.PaymentTypeId in (10) and txn.ProcessorId in (22) and txn.Ref_BatchTypeId in (1) /* Amex , Bucket , Vantiv = Processing */ then 1
+    else 0 end
      ) = 1
      and txn.PlatformId in (1,2,3,4) -- No HA-Intl for now       
 group by
@@ -156,8 +155,8 @@ where    1 = 1
      and txn.ProcessorId not in (14,16)                   
      and txn.TransactionCycleId in (1) 
      and ( case when txn.paymenttypeid in (1, 2, 3, 11, 12, /* <-- regular cards */ /* pre 2012 debit networks --> */  6,7,8,9) then 1
-			when txn.PaymentTypeId in (10) and txn.ProcessorId in (22) and txn.Ref_BatchTypeId in (1) /* Amex , Bucket , Vantiv = Processing */ then 1
-		else 0 end
+      when txn.PaymentTypeId in (10) and txn.ProcessorId in (22) and txn.Ref_BatchTypeId in (1) /* Amex , Bucket , Vantiv = Processing */ then 1
+    else 0 end
      ) = 1
      and txn.PlatformId in (1,2,3,4) -- No HA-Intl for now       
 group by
@@ -182,8 +181,8 @@ set @dates = stuff((select ',' + quotename(convert(varchar(10),colName)) from (
  
 set @query = '
 select Vertical, '+quotename(@end)+' as '+quotename(@end)+',  
-  MTD, cast(cast(round((MTD/lyMTD -1)*100,2) as decimal(18,2)) as varchar)+''%'' as [MTD YoY],  
-  YTD, cast(cast(round((YTD/lyYTD -1)*100,2) as decimal(18,2)) as varchar)+''%'' as [YTD YoY]
+  MTD, cast(cast(isnull(round((MTD/lyMTD -1)*100,2),100) as decimal(18,2)) as varchar)+''%'' as [MTD YoY],  
+  YTD, cast(cast(isnull(round((YTD/lyYTD -1)*100,2),100) as decimal(18,2)) as varchar)+''%'' as [YTD YoY]
   into #Vertical
 from (
 select * from (
@@ -200,8 +199,8 @@ pivot (
 
 set @total = '
 select ''Total'' as Vertical, '+quotename(@end)+' as '+quotename(@end)+',  
-  MTD, cast(cast(round((MTD/lyMTD -1)*100,2) as decimal(18,2)) as varchar)+''%'' as [MTD YoY],  
-  YTD, cast(cast(round((YTD/lyYTD -1)*100,2) as decimal(18,2)) as varchar)+''%'' as [YTD YoY]
+  MTD, cast(cast(isnull(round((MTD/lyMTD -1)*100,2),100) as decimal(18,2)) as varchar)+''%'' as [MTD YoY],  
+  YTD, cast(cast(isnull(round((YTD/lyYTD -1)*100,2),100) as decimal(18,2)) as varchar)+''%'' as [YTD YoY]
   into #Total
 from (
 select * from (

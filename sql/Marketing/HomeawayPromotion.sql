@@ -92,7 +92,7 @@ group by
 	c.ChildAccountId, ha.propertyId 
 	
 select 
-	PropertyOwnerAccountId, PropertyOwnerName, StreetAddress, City, State, Zip,
+	PropertyOwnerAccountId, PropertyOwnerName, StreetAddress, City, State, Zip, sum(#of_Txns) #of_Txns,
 	stuff((select cast(', '+ cast(HomeawayPropertyId as varchar(max)) as varchar(max))
 		from #Report sub
 		where sub.PropertyOwnerAccountId = Report.PropertyOwnerAccountId

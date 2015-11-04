@@ -190,6 +190,7 @@ from
 where             
 	txn.PostDate_R between @start and @end 
 	and txn.PlatformId in (3)
+	and txn.ProcessorId not in (14,16)
 	and txn.PaymentTypeId in (1,2,3,11,12)
 	and txn.TransactionCycleId in (1)
 group by year(txn.PostDate_R) , month(txn.PostDate_R) ,  
@@ -301,6 +302,7 @@ from
    inner join #Rates fx on  txn.PostDate_R = fx.Date and txn.CurrencyId = fx.CurrencyId
 where             
 	txn.PostDate_R between @start and @end 
+	and txn.ProcessorId not in (14,16)
 	and txn.PlatformId in (4)
 	and txn.PaymentTypeId in (1,2,3,11,12)
 	and txn.TransactionCycleId in (1)

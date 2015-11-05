@@ -16,11 +16,11 @@ MISC="/home/skilbjo/code/node/app/schedlr/jobs/Misc"
 1 19 * * 2-6 cd $DAILY ; node Daily_Card_Volume.js >/dev/null
 
 ### Marketing
-15 4 * * 2-6 cd $MARKETING ; node HomeawayPromotion.js >/dev/null
+30 14 * * * cd $MARKETING ; node HomeawayPromotion.js >/dev/null
 
 ### Testing
-35 17 * * * cd $DAILY ; node test_Daily_TPV.js >/dev/null
-35 17 * * * cd $DAILY ; node test_Daily_Card_Volume.js >/dev/null
+25 16 * * * cd $DAILY ; node test_Daily_TPV.js >/dev/null
+25 16 * * * cd $DAILY ; node test_Daily_Card_Volume.js >/dev/null
 
 
 ## Weekly
@@ -29,17 +29,15 @@ MISC="/home/skilbjo/code/node/app/schedlr/jobs/Misc"
 
 ## Monthly
 ### Rent & Account Management reports
-0 12 10 * * cd $RENT ; node Tricity.js >/dev/null
-0 19 3 * * cd $RENT ; node AdHoc_Request.js >/dev/null
-5 17 3 * * cd $RENT ; node PenetrationRate.js >/dev/null
-5 17 3 * * cd $RENT ; node PeopleTransacting.js >/dev/null
+0 20 10 * * cd $RENT ; node Tricity.js >/dev/null
+5 20 3 * * cd $RENT ; node PenetrationRate.js >/dev/null
+5 20 3 * * cd $RENT ; node PeopleTransacting.js >/dev/null
 
 ### Corp Dev
-0 15 3 * * cd $CORPDEV ; node HAListings.js >/dev/null
+0 20 3 * * cd $CORPDEV ; node HAListings.js >/dev/null
 
 
 ### Testing
 #15 * * * * cd $MISC ; node test.js >/dev/null
 #1 * * * * cd $MISC ; node test1.js >/dev/null
 #* * * * * cd $DIRECTORY ; echo 'Hello'
-

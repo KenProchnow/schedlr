@@ -2,7 +2,7 @@
 -- HA Visa Promotion Query 
 declare @pivot as date
 
-set @pivot	= '2015-10-20' 
+set @pivot	= '2015-11-09' 
 
 if object_id('tempdb..#AllPropertyOwners') is not null drop table #AllPropertyOwners
 select 
@@ -73,7 +73,7 @@ select
 	ha.propertyId HomeawayPropertyId ,
 	Eligible.PropertyOwnerAccountId, Eligible.PropertyOwnerName,
 	Eligible.StreetAddress, Eligible.City,Eligible.State, Eligible.Zip,
-	c.ChildAccountId as ListingAccountId, count(distinct(txn.IdClassId)) #of_Txns
+	c.ChildAccountId as ListingAccountId, txn.IdClassId TxnRefNo
 	into #Report
 from 
 	#Eligible Eligible
@@ -87,16 +87,21 @@ where
 	and txn.PlatformId = 3	
 group by 
 	txn.PlatformId,
+	ha.propertyId ,
 	Eligible.PropertyOwnerAccountId, Eligible.PropertyOwnerName,
 	Eligible.StreetAddress, Eligible.City,Eligible.State, Eligible.Zip,
-	c.ChildAccountId, ha.propertyId 
+	c.ChildAccountId, txn.IdClassId
 	
 select 
-	PropertyOwnerAccountId, PropertyOwnerName, StreetAddress, City, State, Zip, sum(#of_Txns) #of_Txns,
+	PropertyOwnerAccountId, PropertyOwnerName, StreetAddress, City, State, Zip,
 	stuff((select cast(', '+ cast(HomeawayPropertyId as varchar(max)) as varchar(max))
 		from #Report sub
 		where sub.PropertyOwnerAccountId = Report.PropertyOwnerAccountId
-		for xml path('')),1,2,'') as PropertyId
+		for xml path('')),1,2,'') as PropertyId,
+	stuff((select cast(', '+ cast(TxnRefNo as varchar(max)) as varchar(max))
+		from #Report sub
+		where sub.PropertyOwnerAccountId = Report.PropertyOwnerAccountId
+		for xml path('')),1,2,'') as TxnRefIds
 from 
 	#Report Report
 group by 
